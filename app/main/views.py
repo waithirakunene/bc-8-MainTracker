@@ -1,7 +1,5 @@
 from flask import render_template, url_for, redirect, abort, flash, request, current_app
-
 from flask_login import login_required, current_user
-
 from app import db
 from app.main import main
 from app.models import User, Facility
