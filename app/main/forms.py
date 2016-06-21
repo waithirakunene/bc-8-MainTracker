@@ -6,29 +6,45 @@ from wtforms.validators import Required, Length, ValidationError, Regexp, Email,
 
 
 class AddFacilityDetailsForm(Form):
-    Facility_name = StringField("Asset Name",validators=[Required(), Length(8, 50)])
-    Facility_description = TextAreaField("Detailed Information")
-    Facility_serial_no = StringField(
-        "Serial No.", 
-        validators= [
-            Required(), 
-            Length(10, 15), 
-            Regexp(
-                '^[A-Za-z][A-Za-z0-9_.]*$', 
-                0,
-                'Usernames must have only letters, ''numbers, dots or underscores')]),
-                
+    facility_name = StringField("Facility Name",validators=[Required(), Length(8, 50)])
+    facility_description = TextAreaField("Detailed Information")
     
     submit = SubmitField("Submit")
+    #validate facility name
+    def validate_name(self, field):
+        if Facility.query.filter_by(facility_name=field.data).first():
+            raise ValidationError("Facility exists.")
+
 
 
 class AddRepairPersons(Form):
-    name = StringField("Name Asset", validators=[()])
-    phone_no = IntegerField(
-            "Phone Number", 
-            validators=
-            [Required(),
-            Length(10, 13)])
+    name = StringField("Name ", validators=[Required(), Length(8, 50)])
+    phone_no  = IntegerField(
+            "phone_no", validators = []
+            )
+            
     
     submit = SubmitField("Add")
+
+
+class RepairDetailsForm(Form):
+    description = StringField("Description", validators=[Required(), Length(10, 255)])
+    facility = SelectField("Facility", coerce=int)
+
+    def __init__(self, *args, **kwargs):
+        super(RepairDetailsForm, self).__init__(*args, **kwargs)
+        self.facility.choices = [
+            (i.id, i.facility_name) for i in Facility.query.order_by(Facility.facility_name).all()
+        ]
+
+
+class RequestRepairForm(RepairDetailsForm):
+    submit = SubmitField("Submit")
+
+    def __init__(self, *args, **kwargs):
+        super(RequestRepairForm, self).__init__(*args, **kwargs)
+
+
+
+
 
