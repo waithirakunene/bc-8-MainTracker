@@ -6,7 +6,7 @@ from flask_migrate import Migrate, MigrateCommand
 from app.models import User
 from app import create_app, db
 
-app = create_app(os.getenv('MAINTRACKOR_CONFIG') or 'default')
+app = create_app(os.getenv('MAINTRACKER_CONFIG') or 'default')
 migrate = Migrate(app, db)
 manager = Manager(app)
 
@@ -20,7 +20,7 @@ manager.add_command('db', MigrateCommand)
 
 @manager.command
 def deploy():
-    """Deployment tasks."""
+    """Deployment """
     pass
 
 if __name__ == '__main__':
