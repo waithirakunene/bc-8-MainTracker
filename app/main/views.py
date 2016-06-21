@@ -57,7 +57,6 @@ def request_repair():
         db.session.add(repair)
         db.session.commit()     
         #Notify admin
-        
         return redirect(url_for('main.view_repair', repair_id=repair.id))
     return render_template('main/request_repair.html', form=form)
 
