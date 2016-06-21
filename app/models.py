@@ -13,7 +13,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
-    role = db.Column(db.Integer, default=2)
+    is_admin = db.Column(db.Boolean, default=False)
+    is_repairperson = db.Column(db.Boolean, default=False)
     
 
     @property
@@ -100,18 +101,24 @@ class Facility(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     facility_name = db.Column(db.String(64), unique=True, index=True)
     facility_description= db.Column(db.String(64), unique=True, index=True)
-    facility_serial_no = db.Column(db.String(128))
+    repairs = db.relationship('Repairs', backref='facility', lazy='dynamic')
 
 class RepairPersons(db.Model):
     __tablename__ = 'repairpersons'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, index=True)
-    phone_no = db.Column(db.Integer, primary_key=True, unique=True ) 
-   
-  
+    phone_no = db.Column(db.Integer, unique=True) 
    
 
-
- 
+class Repairs(db.Model):
+    __tablename__ = 'repairs'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    facility_id = db.Column(db.Integer, db.ForeignKey('facility.id'), nullable=False)
+    requested_by_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    requested_by = db.relationship('User', foreign_keys=[requested_by_id])
+    description = db.Column(db.String(255), nullable=False)
+    date_requested = db.Column(db.DateTime(), index=True, default=datetime.now)
+    
 
   
