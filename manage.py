@@ -2,6 +2,7 @@ import os
 
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
+from flask_debugtoolbar import DebugToolbarExtension
 
 from app.models import User
 from app import create_app, db
@@ -9,6 +10,7 @@ from app import create_app, db
 app = create_app(os.getenv('MAINTRACKER_CONFIG') or 'default')
 migrate = Migrate(app, db)
 manager = Manager(app)
+toolbar = DebugToolbarExtension(app)
 
 
 def make_shell_context():
