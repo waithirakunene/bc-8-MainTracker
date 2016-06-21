@@ -18,8 +18,6 @@ def login():
 
             return redirect(url_for('main.add_facility'))
         flash('Invalid username or password')
-
-   
     return render_template('auth/login.html', form=form)
 
 
