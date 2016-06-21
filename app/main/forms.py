@@ -5,8 +5,6 @@ from wtforms import SubmitField, SelectField, StringField, TextAreaField, Intege
 from wtforms.validators import Required, Length, ValidationError, Regexp, Email, NumberRange
 
 
-
-
 class AddFacilityDetailsForm(Form):
     Facility_name = StringField("Asset Name",validators=[Required(), Length(8, 50)])
     Facility_description = TextAreaField("Detailed Information")
