@@ -4,7 +4,6 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo, ValidationError
 from app.models import User, Facility
 
-
 class LoginForm(Form):
     username = StringField('Username', validators=[Required(), Length(1, 64)])
     password = PasswordField('Password')
@@ -47,7 +46,7 @@ class ChangePasswordForm(Form):
     )
     password2 = PasswordField('Confirm New Password', validators=[Required()])
     submit = SubmitField('Update Password')
-    
+
 
 class ChangeEmailForm(Form):
     email = StringField('New Email', validators=[Required(), Length(1, 64),
