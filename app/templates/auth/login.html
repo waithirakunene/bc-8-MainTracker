@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block title %}
+    MainTrackor - Login
+{% endblock title %}
+
+{% block content %}
+</div>
+    <div class="row">
+  
+    <div class="col-md-6 col-md-offset-3 auth-login-form">
+        <div class="row">
+              {% for message in get_flashed_messages() %}
+                <div class="alert alert-warning">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ message }}
+    
+    {% endfor %}
+                </div>
+            <b><h1 class="text-center">Maintenance Trackor</h1></b>
+
+            <h1 class="text-center">Login</h1>
+            
+            <div class="col-sm-8 col-sm-offset-2">
+                {{ wtf.quick_form(form) }}
+                <br/>
+                New User?
+                <a href="{{ url_for('auth.register') }}">Click here to register</a>
+                </br>
+                Forgot your password?
+                <a href="{{ url_for('auth.reset_password') }}">Click here to request a new password.</a>
+            </div>
+        </div>
+    </div> 
+</div>
+{% endblock content%}
