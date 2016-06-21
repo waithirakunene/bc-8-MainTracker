@@ -2,9 +2,11 @@
     margin-top: 50px;
 }
 
+
 .auth-register-form {
     margin-top: 20px;
 }
+
 
 .brand-link, .brand-link:hover {
     text-decoration: none;
@@ -12,18 +14,22 @@
     color: inherit;
 }
 
+
 .task-type-header a {
     text-decoration: none;
 }
+
 
 
 .update-page {
     margin-bottom: 30px;
 }
 
+
 .main {
     margin-top: 50px;
 }
+
 
 .tasks-panel {
     margin-top: 30px;
