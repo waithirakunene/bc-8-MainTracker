@@ -1,4 +1,4 @@
-# bc-8-MainTrackor
+# bc-8-MainTracker
  MaintenanceTrackorSystem
 Maintenance Tracker is system to allow reporting of maintenance/repairs request by users on certain facilities, An admin keeps track of requests and can respond or reject them. The system will facilitate  maintenance process and escalate unusual delays.
 ##### Features
