@@ -1,40 +1,11 @@
-{% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-{% block title %}
-    MainTracker - Add Facility
-{% endblock title %}
+{% extends "main/index.html" %}
 
-{% block content %}
-    <br/>
-    <div class="container">
-       
-            <div class="col-sm-3" >
-                <div class="row">
-                    <div class="list-group">
-                        <a href="" class="list-group-item">Add Facility</a>
-                        <a href="{{ url_for('main.add_repair_persons') }}" class="list-group-item">Add Maintenance Person</a>
-                        <a href="{{ url_for('main.request_repair') }}" class="list-group-item">Make a Repair Request</a>
-                        <a href="" class="list-group-item">luidhgi</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-sm-9">
-                <div class="row">
-                    {% for message in get_flashed_messages() %}
-                <div class="alert alert-warning">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    {{ message }}
-    
-    {% endfor %}
-                </div>
-                    <h1 class="text-center">Add Facility</h1>
-                    
-                    <div class="col-sm-10 col-sm-offset-1">
-                        {{ wtf.quick_form(form) }}
-                    </div>
-                </div>
-            </div>
+{% block dashboard %}
+    <div class="row">
+        <h1 class="text-center">Add Facility</h1>
+        
+        <div class="col-sm-10 col-sm-offset-1">
+            {{ wtf.quick_form(form) }}
         </div>
     </div>
-{% endblock content %}
+{% endblock dashboard %}
