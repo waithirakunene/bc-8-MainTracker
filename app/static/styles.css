@@ -19,7 +19,10 @@
     text-decoration: none;
 }
 
-
+.heading {
+    font-weight: bold;
+    font-size: 20px;
+}
 
 .update-page {
     margin-bottom: 30px;
@@ -30,6 +33,9 @@
     margin-top: 50px;
 }
 
+.dashboard {
+    margin-top: 20px;
+}
 
 .tasks-panel {
     margin-top: 30px;
