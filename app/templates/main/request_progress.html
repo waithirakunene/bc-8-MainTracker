@@ -1,0 +1,25 @@
+{% extends "main/index.html" %}
+
+{% block dashboard %}
+
+    <div class="row heading">
+        <div class="col-md-3">Requested by</div>
+        <div class="col-md-3">Assigned To</div>
+        <div class="col-md-3">Status</div>
+        <div class="col-md-3">Actions</div>
+    </div>
+    <br/>
+
+    <div class="row">
+        <div class="col-md-3">Anne</div>
+        <div class="col-md-3">
+            Waithera
+            <br/>
+            0798578638
+        </div>
+        <div class="col-md-3">In Progress</div>
+        <div class="col-md-3">
+            <button type="button" class="btn btn-success btn-sm">Approve</button>
+        </div>
+    </div>
+{% endblock dashboard %}
