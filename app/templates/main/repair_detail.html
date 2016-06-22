@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "partials/_repair_details_panel.html" as task_det_panel %}
+
+{% block title %}
+    MainTracker - Task Request
+{% endblock title %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            
+
+           
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    {{ task_det_panel.details_panel(repairs) }}
+                </div> <!-- col -->
+            </div> <!-- row -->
+        </div> <!-- col -->
+        {% if current_user.is_admin or current_user.is_maintenance %}
+            <div style="clear: both">
+                <a href="{{ url_for('main.index') }}">&laquo; Back to tasklist.</a>
+            </div>
+        {% endif %}
+    </div> <!-- row -->
+{% endblock content %}
