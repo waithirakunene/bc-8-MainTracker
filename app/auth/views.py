@@ -1,4 +1,4 @@
-from flask import render_template, url_for, redirect, request, flash
+from flask import render_template, url_for, redirect, request, flash, g
 from flask_login import current_user, login_user, login_required, logout_user
 from .. import db
 from . import auth
@@ -7,16 +7,21 @@ from .forms import LoginForm, RegistrationForm, PasswordResetRequestForm, Change
 
 
 
-@auth.route('/', methods=['GET', 'POST'])
+@auth.before_request
+def before_request():
+    g.user = current_user
+
+
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
+    if g.user is not None and g.user.is_authenticated:
+        return redirect(url_for('main.index'))
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is not None and user.verify_password(form.password.data):
-            login_user(user, form.remember_me.data)
-            
-
-            return redirect(url_for('main.add_facility'))
+            login_user(user, form.remember_me.data)               
+            return redirect(url_for('main.index'))
         flash('Invalid username or password')
     return render_template('auth/login.html', form=form)
 
@@ -31,6 +36,8 @@ def logout():
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
+    if g.user is not None and g.user.is_authenticated:
+        return redirect(url_for('main.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(email=form.email.data,
@@ -41,8 +48,9 @@ def register():
         '''token = user.generate_confirmation_token()
         send_email(user.email, 'Confirm Your Account',
                    'auth/email/confirm', user=user, token=token)'''
-        flash('You have been registered.Login to continue.')
-        return redirect(url_for('auth.login'))
+        flash("You have been registered. Welcome {}.".format(user.username))
+        login_user(user)               
+        return redirect(url_for('main.index'))
     return render_template('auth/register.html', form=form)
 
 def validate_email(self, field):
