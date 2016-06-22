@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+
+{% block title %}MainTrackor - Home Page{% endblock %}
+
+{% block content %}
+    
+    <div class="row">
+        <div class="container dashboard">
+            <div class="col-sm-3" >
+                <div class="row">
+                    <div class="list-group">
+                        {% if current_user.is_admin %}
+                        <a href="{{ url_for('main.add_facility') }}" class="list-group-item selected">Add Facility</a>
+                        <a href="{{ url_for('main.add_maintainer') }}" class="list-group-item">Add a Maintener</a>
+                        <a href="{{ url_for('main.view_new_requests') }}" class="list-group-item">View New Requests</a>
+                        <a href="{{ url_for('main.view_request_progress') }}" class="list-group-item">View Progress</a>
+                        {% else %}
+                        <a href="{{ url_for('main.request_repair') }}" class="list-group-item">Make Request</a>
+                        <a href="" class="list-group-item">Notifications
+                            <span class="label label-default label-pill pull-right">14</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-9">
+                <div class="row">
+                    {% for message in get_flashed_messages() %}
+                        <div class="alert alert-warning">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            {{ message }}                    
+                        </div>
+                    {% endfor %}
+                    
+                    
+                    <div class="col-sm-11 col-sm-offset-1">
+                        {% block dashboard %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
