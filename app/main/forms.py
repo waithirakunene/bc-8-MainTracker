@@ -44,6 +44,9 @@ class RequestRepairForm(RepairDetailsForm):
     def __init__(self, *args, **kwargs):
         super(RequestRepairForm, self).__init__(*args, **kwargs)
 
+class RejectRepairForm(Form):
+    reasons = TextAreaField("Write a Comments.")
+
 # class AdminRepairUpdateForm(RepairDetailsForm):
 #     confirmed = BooleanField("Confirm Repair Request")
 #     assigned_to_id = SelectField("Assigned To", coerce=int)
@@ -53,3 +56,8 @@ class RequestRepairForm(RepairDetailsForm):
 #     submit = SubmitField("Update")
 
    
+class AssignToForm(Form):
+    def __init__(self, *args, **kwargs):
+        self.repairpersons.choices = [
+            (i.id, i.name) for i in RepairPersons.query.order_by(RepairPersons.name).all()
+        ]
