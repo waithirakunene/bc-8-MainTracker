@@ -1,0 +1,22 @@
+{% extends "main/index.html" %}
+
+{% block dashboard %}
+    <div class="row heading">
+        <div class="col-md-4">Requested by</div>
+        <div class="col-md-4">Description</div>
+        <div class="col-md-4">Actions</div>
+    </div>
+    <br/>
+
+    <div class="row">
+        <div class="col-md-4">Anne</div>
+        <div class="col-md-4">
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
+            Lorem Ipsum has been the industry's standard
+        </div>
+        <div class="col-md-4">
+            <button type="button" class="btn btn-primary btn-sm">Assign</button>
+            <button type="button" class="btn btn-danger btn-sm">Reject</button>
+        </div>
+    </div>
+{% endblock dashboard %}
