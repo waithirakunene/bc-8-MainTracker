@@ -11,16 +11,16 @@ from app.main.forms import (
 @main.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
-    tasks = []
+    repairs = []
     if current_user.is_admin:
         repairs = Repairs.query.order_by(Repairs.date_requested.desc()).all()
-        pending = len([repair for repair in repairs if not repairs.resolved])
+        
         form = AddFacilityDetailsForm()
         return render_template('main/add_facility.html', form=form)
     else:
         repairs = Repairs.query.filter_by(
             requested_by_id=current_user.id).order_by(Repairs.date_requested.desc())
-        pending = len([repair for repair in repairs if not repair.resolved])
+    
         form = RequestRepairForm()
         return render_template('main/request_repair.html', form=form)
 
@@ -56,7 +56,7 @@ def add_maintainer():
         )
         db.session.add(repairPerson)
         db.session.commit()
-        flash('You have added one person')
+        flash('You have added a maintainer')
         return redirect(url_for('main.add_maintainer'))
     return render_template('main/add_maintainer.html', form=form)
 
@@ -68,16 +68,18 @@ def add_maintainer():
 def request_repair():
     form = RequestRepairForm()
     if form.validate_on_submit():
-        repair = Repair(
+        repair = Repairs(
             requested_by_id=current_user.id,
             facility_id=form.facility.data,
-            facility_desc=form.facility_desc.data,
+            description=form.description.data,
             
         )
         db.session.add(repair)
         db.session.commit()     
         #Notify admin
-        return redirect(url_for('main.view_repair', repair_id=repair.id))
+        
+        #return redirect(url_for('main.view_request_progress', repair_id=repair.id))
+        flash('Great you made a request')
     return render_template('main/request_repair.html', form=form)
 
 
@@ -85,9 +87,9 @@ def request_repair():
 @main.route('/view-repairs/<int:repair_id>')
 @login_required
 def view_repairs(repair_id):
-    repair = Repairs.query.get_or_404(task_id)
+    repair = Repairs.query.get_or_404(repair_id)
     if not (current_user.is_admin):
-        if task.requested_by_id != current_user.id:
+        if Repairs.requested_by_id != current_user.id:
             abort(403)
     return render_template('main/repair_detail.html', repair=repair)
 
@@ -97,11 +99,13 @@ def view_repairs(repair_id):
 @main.route('/new-requests')
 @login_required
 def view_new_requests():
+    r = Repairs.query.order_by(Repairs.date_requested.desc()).all()
     
-    return render_template('main/new_requests.html')
+    return render_template('main/new_requests.html', r=r)
 
 @main.route('/request-progress')
 @login_required
 def view_request_progress():
+    return 'was I accepted or rejected'
     
     return render_template('main/request_progress.html')
