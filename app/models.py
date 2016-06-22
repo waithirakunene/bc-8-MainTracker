@@ -14,7 +14,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean, default=False)
-    is_repairperson = db.Column(db.Boolean, default=False)
+    is_maintainer = db.Column(db.Boolean, default=False)
     
 
     @property
@@ -92,7 +92,7 @@ class User(UserMixin, db.Model):
         db.session.add(self)
         return True
 
-
+    
 
     
 
@@ -108,7 +108,12 @@ class RepairPersons(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, index=True)
     phone_no = db.Column(db.Integer, unique=True) 
-   
+
+class RepairStatus:
+    NOT_STARTED = 0
+    STARTED = 1
+    PENDING = 2
+    DONE = 3
 
 class Repairs(db.Model):
     __tablename__ = 'repairs'
@@ -119,6 +124,25 @@ class Repairs(db.Model):
     requested_by = db.relationship('User', foreign_keys=[requested_by_id])
     description = db.Column(db.String(255), nullable=False)
     date_requested = db.Column(db.DateTime(), index=True, default=datetime.now)
-    
+    #additional fields
+    confirmed = db.Column(db.Boolean, default=False)
+    resolved = db.Column(db.Boolean, default=False)
+    acknowledged = db.Column(db.Boolean, default=False)
+    updated = db.Column(db.DateTime, default=datetime.now)
+    progress = db.Column(db.Integer, default=RepairStatus.NOT_STARTED)
+    date_requested = db.Column(db.DateTime(), index=True, default=datetime.now)
+    date_completed = db.Column(db.DateTime(), nullable=True) 
 
-  
+
+
+    @property
+    def status(self):
+        if self.progress not in (0, 1, 2, 3):
+            return "Unknown"
+        elif self.progress == RepairStatus.NOT_STARTED:
+            return "Not Started"
+        elif self.progress == RepairStatus.STARTED:
+            return "Started"
+        elif self.progress == RepairStatus.PENDING:
+            return "In Progress"
+        return "DONE"
