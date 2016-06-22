@@ -5,7 +5,7 @@ from app.main import main
 from app.models import User, Facility, RepairPersons, Repairs, RepairStatus 
 
 from app.main.forms import (
-   AddFacilityDetailsForm, AddRepairPersons, RepairDetailsForm, RequestRepairForm
+   AddFacilityDetailsForm, AddRepairPersons, RepairDetailsForm, RequestRepairForm, RejectRepairForm
 )
 
 @main.route('/', methods=['GET', 'POST'])
@@ -80,6 +80,7 @@ def request_repair():
         
         #return redirect(url_for('main.view_request_progress', repair_id=repair.id))
         flash('Great you made a request')
+        return redirect(url_for('main.request_repair'))
     return render_template('main/request_repair.html', form=form)
 
 
@@ -99,13 +100,53 @@ def view_repairs(repair_id):
 @main.route('/new-requests')
 @login_required
 def view_new_requests():
-    r = Repairs.query.order_by(Repairs.date_requested.desc()).all()
+    if current_user.is_admin:
+        r = Repairs.query.order_by(Repairs.date_requested.desc()).all()
+    
     
     return render_template('main/new_requests.html', r=r)
+
+@main.route('/repairs/reject/<int:repairs_id>', methods=['GET', 'POST', 'DELET'])
+@login_required
+def reject_repair_request(repairs_id):
+    # import pdb; pdb.set_trace()
+    if not current_user.is_admin:
+        abort(403)
+    repair = Repairs.query.get_or_404(repairs_id)
+    form = RejectRepairForm()
+
+    if request.method == 'GET':
+        temp = {
+            'description': repair.description,
+            'date_requested': repair.date_requested,
+            'facility': repair.facility,
+            'requested_by': repair.requested_by.email,
+            'requested_by_name': repair.requested_by.username,
+            'reasons': form.reasons.data
+        }
+        db.session.delete(repair)
+        db.session.commit()
+
+
+
+        #send_mail(repair=temp, rejected=True)
+        return redirect(url_for('main.view_new_requests'))
+    # if request.method == "DELETE":
+    #     print "fdgrfgf"
+    return render_template('main/new_requests.html', repair=repair, form=form)
+
+
+
 
 @main.route('/request-progress')
 @login_required
 def view_request_progress():
-    return 'was I accepted or rejected'
+    if current_user.is_admin:
+        rep = Repairs.query.order_by(Repairs.date_requested.desc()).all()
+        #traq = RepairPersons.query.filter_by(repairpersons.id = repairPersons.)
+  
     
-    return render_template('main/request_progress.html')
+    return render_template('main/request_progress.html', rep=rep)
+
+
+   
