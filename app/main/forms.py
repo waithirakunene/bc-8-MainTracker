@@ -44,7 +44,12 @@ class RequestRepairForm(RepairDetailsForm):
     def __init__(self, *args, **kwargs):
         super(RequestRepairForm, self).__init__(*args, **kwargs)
 
+# class AdminRepairUpdateForm(RepairDetailsForm):
+#     confirmed = BooleanField("Confirm Repair Request")
+#     assigned_to_id = SelectField("Assigned To", coerce=int)
+#     acknowledged = BooleanField("Acknowledge Receipt by Assignee")
+#     progress = SelectField("Repair Status", coerce=int)
+#     resolved = BooleanField("Resolved")
+#     submit = SubmitField("Update")
 
-
-
-
+   
