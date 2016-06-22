@@ -14,7 +14,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean, default=False)
-    is_maintainer = db.Column(db.Boolean, default=False)
+    is_repairperson = db.Column(db.Boolean, default=False)
     
 
     @property
@@ -109,7 +109,7 @@ class RepairPersons(db.Model):
     name = db.Column(db.String(64), unique=True, index=True)
     phone_no = db.Column(db.Integer, unique=True) 
 
-class RepairStatus:
+class RepairStatus():
     NOT_STARTED = 0
     STARTED = 1
     PENDING = 2
