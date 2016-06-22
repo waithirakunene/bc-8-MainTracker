@@ -1,7 +1,7 @@
 {% extends "main/index.html" %}
 
 {% block dashboard %}
-{{ r[0].description }}
+
     <div class="row heading">
         <div class="col-md-4">Requested by</div>
         <div class="col-md-4">Description</div>
@@ -10,14 +10,18 @@
     <br/>
 
     <div class="row">
-        <div class="col-md-4">Anne</div>
-        <div class="col-md-4">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
-            Lorem Ipsum has been the industry's standard
-        </div>
-        <div class="col-md-4">
+        {% for repair in r %}
+            <div class="col-md-4">{{repair.requested_by.username}}</div>
+            <div class="col-md-4">{{repair.description}}</div>
+            <div class="col-md-4">
             <button type="button" class="btn btn-primary btn-sm">Assign</button>
-            <button type="button" class="btn btn-danger btn-sm">Reject</button>
+            <a href="{{ url_for('main.reject_repair_request', repairs_id=repair.id)}}" class="btn btn-danger btn-sm">
+                Reject
+            </a>
         </div>
+        {% endfor %}
+
+      
+
     </div>
 {% endblock dashboard %}
