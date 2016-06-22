@@ -11,15 +11,15 @@
     <br/>
 
     <div class="row">
-        <div class="col-md-3">Anne</div>
+        {% for repair in rep %}
+        <div class="col-md-3">{{repair.requested_by.username}}</div>
         <div class="col-md-3">
-            Waithera
-            <br/>
-            0798578638
+             
         </div>
         <div class="col-md-3">In Progress</div>
         <div class="col-md-3">
             <button type="button" class="btn btn-success btn-sm">Approve</button>
         </div>
+    {% endfor %}
     </div>
 {% endblock dashboard %}
