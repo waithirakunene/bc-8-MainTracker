@@ -3,7 +3,7 @@ from flask_login import current_user, login_user, login_required, logout_user
 from .. import db
 from . import auth
 from app.models import User
-from .forms import LoginForm, RegistrationForm, PasswordResetRequestForm, ChangePasswordForm, ChangeEmailForm
+from .forms import LoginForm, RegistrationForm, PasswordResetRequestForm, ChangePasswordForm
 
 
 
@@ -45,9 +45,7 @@ def register():
                     password=form.password.data)
         db.session.add(user)
         db.session.commit()
-        '''token = user.generate_confirmation_token()
-        send_email(user.email, 'Confirm Your Account',
-                   'auth/email/confirm', user=user, token=token)'''
+        
         flash("You have been registered. Welcome {}.".format(user.username))
         login_user(user)               
         return redirect(url_for('main.index'))
@@ -67,17 +65,7 @@ def reset_password():
     form = PasswordResetRequestForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        '''if user:
-            token = user.generate_confirmation_token()
-            send_email(
-                user.email, 'Reset Your Password', 'auth/email/reset_password',
-                user=user, token=token, next=request.args.get('next')
-            )
-            flash("An email with instructions to reset your password has been sent to you.")
-            return redirect(url_for('auth.login'))
-        else:
-            flash("Unable to find an account associated with that email address")
-            return redirect(url_for('auth.password_reset_request'))'''
+        
     return render_template('auth/reset_password.html', form=form)
 
 
@@ -98,24 +86,4 @@ def change_password():
     return render_template('auth/change_password.html', form=form)
 
 
-
-@auth.route('/change_email', methods=['GET', 'POST'])
-@login_required
-def change_email_request():
-    form = ChangeEmailForm()
-    if form.validate_on_submit():
-        if current_user.verify_password(form.password.data):
-            new_email = form.email.data
-            '''token = current_user.generate_email_change_token(new_email)
-            send_email(
-                new_email,
-                'Confirm your email address', 'auth/email/change_email',
-                user=current_user, token=token
-            )'''
-            flash("An email with instructions to confirm your new email address " +
-                  "has been sent to you.")
-            #return redirect(url_for('main.index'))
-        else:
-            flash("Invalid email or password")
-    return render_template('auth/change_email.html', form=form)
 
