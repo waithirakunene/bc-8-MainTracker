@@ -107,9 +107,11 @@ class RepairPersons(db.Model):
     __tablename__ = 'repairpersons'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True, index=True)
+    message = db.Column(db.String(120))
     phone_no = db.Column(db.Integer, unique=True) 
 
-class RepairStatus():
+
+class RepairStatus:
     NOT_STARTED = 0
     STARTED = 1
     PENDING = 2
