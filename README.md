@@ -39,12 +39,12 @@ A normal user makes a request for maintainance and can view notifications after 
 A person in charge of maintainance can view new assignment to tasks,can view the task and update its progress.
 
 ###Bugs
-Sometimes routes redirects breaks or page not foud(error 400)
+Sometimes routes redirects breaks or page not found(error 400)
 
 
 
 ###Conclusions.
-This app is build using flask micro framework for python.
+This app is build using Flask micro framework for python.
 It has helped me master several skills on software backend and frontend development.
 I have attained skills on:
 * using Jinja boostrap
