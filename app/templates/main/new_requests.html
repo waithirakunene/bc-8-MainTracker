@@ -13,10 +13,11 @@
         {% for repair in r %}
             <div class="col-md-4">{{repair.requested_by.username}}</div>
             <div class="col-md-4">{{repair.description}}</div>
-            <div class="col-md-4">
+            <div class="col-md-4">{{repair.name}}</div>
             <a  class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal" data-repairid="{{repair.id}}">
                 Assign
             </a>
+
             <a href="{{ url_for('main.reject_repair_request', repairs_id=repair.id)}}" class="btn btn-danger btn-sm">
                 Reject
             </a>
@@ -43,7 +44,7 @@
                 <div class="modal-footer">
 
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <a href="#" id="assign-to">
+                    <a href="{{ url_for('main.assign_to', id="assign-to")}}" >
                     <button type="button" class="btn btn-primary">Send</button></a>
                 </div>
             </div>
