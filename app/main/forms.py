@@ -1,7 +1,7 @@
 from flask import flash
 from flask_wtf import Form
-from .. models import Facility
-from wtforms import SubmitField, SelectField, StringField, TextAreaField, IntegerField
+from ..models import Facility, RepairPersons, Repairs, RepairStatus
+from wtforms import SubmitField, SelectField, StringField, TextAreaField, IntegerField, BooleanField
 from wtforms.validators import Required, Length, ValidationError, Regexp, Email, NumberRange
 
 
@@ -46,18 +46,32 @@ class RequestRepairForm(RepairDetailsForm):
 
 class RejectRepairForm(Form):
     reasons = TextAreaField("Write a Comments.")
-
-# class AdminRepairUpdateForm(RepairDetailsForm):
-#     confirmed = BooleanField("Confirm Repair Request")
-#     assigned_to_id = SelectField("Assigned To", coerce=int)
-#     acknowledged = BooleanField("Acknowledge Receipt by Assignee")
-#     progress = SelectField("Repair Status", coerce=int)
-#     resolved = BooleanField("Resolved")
-#     submit = SubmitField("Update")
-
    
 class AssignToForm(Form):
+    # def __init__(self):
+    name = SelectField("Name", coerce=int)
+    message = TextAreaField("message")
+
     def __init__(self, *args, **kwargs):
-        self.repairpersons.choices = [
+        super(AssignToForm, self).__init__(*args, **kwargs)
+        self.name.choices = [
             (i.id, i.name) for i in RepairPersons.query.order_by(RepairPersons.name).all()
         ]
+
+   
+    
+
+
+
+class AddFacilityDetailsForm(Form):
+    facility_name = StringField("Facility Name",validators=[Required(), Length(8, 50)])
+    facility_description = TextAreaField("Detailed Information")
+    
+    submit = SubmitField("Submit")
+   
+
+    #validate facility name
+    def validate_name(self, field):
+        if Facility.query.filter_by(facility_name=field.data).first():
+            raise ValidationError("Facility exists.")
+
