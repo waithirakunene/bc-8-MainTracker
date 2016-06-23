@@ -13,7 +13,7 @@
     <div class="row">
         {% for repair in rep %}
         <div class="col-md-3">{{repair.requested_by.username}}</div>
-        <div class="col-md-3">assigned_to</div>
+        <div class="col-md-3">{{repair.assigned_by.name}}</div>
         <div class="col-md-3">{{repair.status}}</div>
         <div class="col-md-3">
             <button type="button" class="btn btn-success btn-sm">edit</button>
