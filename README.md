@@ -32,15 +32,23 @@ N/B View a live demo on heroku.com
 <link>
 
 ####How The System Works.
-A user who is an admin or a staff member is expected to sign up(register) after which an email is sent to im/her requiring to be validated.On successful validation a user can now login.
-The Admin and normal user(a staff member or a fellow) have different roles depending on their level of authentication.
-An admin can add the names and phone numbers of people,doing maintainance, can reject or approve a requests for repairs,can mark whether a task is resolved or its progress.On the other hand a normal user can send requests for maintainace/repair and view its progress.
-A person in charge of mainatance can view new assignment to tasks,can view the task and update its progress.
-####Improvements
->>>>write
+A user who is an admin or a staff member is expected to sign up(register) after which an email is sent to him/her for confirmation.After a successful confirmation a user can now login.
+The Admin and normal user(a staff member or a fellow) have different levels of authentication.
+An admin can add the names and phone numbers for people,doing maintainance, can reject or approve a requests for repairs,can mark whether a task is resolved or its progress,and can view notifications for new request made.On the other hand a normal user can send requests for maintainace/repair and view its progress.
+A normal user makes a request for maintainance and can view notifications after admin has approved.
+A person in charge of maintainance can view new assignment to tasks,can view the task and update its progress.
 
 ###Bugs
->>>>write
+Sometimes routes redirects breaks or page not foud(error 400)
+
+
 
 ###Conclusions.
->>>>>write
+This app is build using flask micro framework for python.
+It has helped me master several skills on software backend and frontend development.
+I have attained skills on:
+* using Jinja boostrap
+* How Client server requests works.
+* Using SQLalchemy database
+* Authenticating user logins.
+* How to manage User Interface.
