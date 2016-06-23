@@ -5,7 +5,7 @@ from app.main import main
 from app.models import User, Facility, RepairPersons, Repairs, RepairStatus 
 
 from app.main.forms import (
-   AddFacilityDetailsForm, AddRepairPersons, RepairDetailsForm, RequestRepairForm, RejectRepairForm
+   AddFacilityDetailsForm, AddRepairPersons, AssignToForm, RepairDetailsForm, RequestRepairForm, RejectRepairForm
 )
 
 @main.route('/', methods=['GET', 'POST'])
@@ -102,9 +102,11 @@ def view_repairs(repair_id):
 def view_new_requests():
     if current_user.is_admin:
         r = Repairs.query.order_by(Repairs.date_requested.desc()).all()
+
+    form = AssignToForm()
     
     
-    return render_template('main/new_requests.html', r=r)
+    return render_template('main/new_requests.html', r=r, form=form)
 
 @main.route('/repairs/reject/<int:repairs_id>', methods=['GET', 'POST', 'DELET'])
 @login_required
@@ -142,11 +144,24 @@ def reject_repair_request(repairs_id):
 @login_required
 def view_request_progress():
     if current_user.is_admin:
-        rep = Repairs.query.order_by(Repairs.date_requested.desc()).all()
-        #traq = RepairPersons.query.filter_by(repairpersons.id = repairPersons.)
-  
-    
+        rep = Repairs.query.order_by(Repairs.progress).all()
     return render_template('main/request_progress.html', rep=rep)
 
 
-   
+
+@main.route('/repair/<id>/assign-to')
+@login_required
+def assign_to(id):
+    form = AssignToForm()
+    if form.validate_on_submit():
+        assign = RepairPersons(
+
+            repairpersons_name = form.repairpersons.data,
+            repairpersons_message =form.repairpersons.data
+
+            )
+        db.session.add(assign)
+        db.session.commit()
+    
+    return redirect(url_for('main.view_request_progress'))
+    # return render_template('main/assign_to.html')
