@@ -106,9 +106,10 @@ class Facility(db.Model):
 class RepairPersons(db.Model):
     __tablename__ = 'repairpersons'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True, index=True)
+    name = db.Column(db.String(64), index=True)
     message = db.Column(db.String(120))
     phone_no = db.Column(db.Integer, unique=True) 
+    repairs = db.relationship('Repairs', backref='repairpersons', lazy='dynamic')
 
 
 class RepairStatus:
@@ -121,9 +122,15 @@ class Repairs(db.Model):
     __tablename__ = 'repairs'
     
     id = db.Column(db.Integer, primary_key=True)
-    facility_id = db.Column(db.Integer, db.ForeignKey('facility.id'), nullable=False)
-    requested_by_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    facility_id = db.Column(db.Integer, db.ForeignKey('facility.id'))
+   
+    requested_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     requested_by = db.relationship('User', foreign_keys=[requested_by_id])
+
+    assigned_by_id = db.Column(db.Integer, db.ForeignKey('repairpersons.id'))
+    assigned_by = db.relationship('RepairPersons', foreign_keys=[assigned_by_id])
+
+
     description = db.Column(db.String(255), nullable=False)
     date_requested = db.Column(db.DateTime(), index=True, default=datetime.now)
     #additional fields
