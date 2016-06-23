@@ -1,13 +1,13 @@
 """empty message
 
-Revision ID: 4732d3158748
+Revision ID: 1e2904b7219b
 Revises: None
-Create Date: 2016-06-21 18:04:17.412749
+Create Date: 2016-06-23 00:26:06.138503
 
 """
 
 # revision identifiers, used by Alembic.
-revision = '4732d3158748'
+revision = '1e2904b7219b'
 down_revision = None
 
 from alembic import op
@@ -27,6 +27,7 @@ def upgrade():
     op.create_table('repairpersons',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=True),
+    sa.Column('message', sa.String(length=120), nullable=True),
     sa.Column('phone_no', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('phone_no')
@@ -48,7 +49,13 @@ def upgrade():
     sa.Column('facility_id', sa.Integer(), nullable=False),
     sa.Column('requested_by_id', sa.Integer(), nullable=False),
     sa.Column('description', sa.String(length=255), nullable=False),
+    sa.Column('confirmed', sa.Boolean(), nullable=True),
+    sa.Column('resolved', sa.Boolean(), nullable=True),
+    sa.Column('acknowledged', sa.Boolean(), nullable=True),
+    sa.Column('updated', sa.DateTime(), nullable=True),
+    sa.Column('progress', sa.Integer(), nullable=True),
     sa.Column('date_requested', sa.DateTime(), nullable=True),
+    sa.Column('date_completed', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['facility_id'], ['facility.id'], ),
     sa.ForeignKeyConstraint(['requested_by_id'], ['users.id'], ),
     sa.PrimaryKeyConstraint('id')
