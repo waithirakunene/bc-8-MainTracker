@@ -2,7 +2,7 @@ from flask import render_template, url_for, redirect, abort, flash, request, cur
 from flask_login import login_required, current_user
 from app import db
 from app.main import main
-from app.models import User, Facility, RepairPersons, Repairs, RepairStatus 
+from ..models import User, Facility, RepairPersons, Repairs, RepairStatus 
 
 from app.main.forms import (
    AddFacilityDetailsForm, AddRepairPersons, AssignToForm, RepairDetailsForm, RequestRepairForm, RejectRepairForm
@@ -108,10 +108,9 @@ def view_new_requests():
     
     return render_template('main/new_requests.html', r=r, form=form)
 
-@main.route('/repairs/reject/<int:repairs_id>', methods=['GET', 'POST', 'DELET'])
+@main.route('/repairs/reject/<int:repairs_id>', methods=['GET', 'POST'])
 @login_required
 def reject_repair_request(repairs_id):
-    # import pdb; pdb.set_trace()
     if not current_user.is_admin:
         abort(403)
     repair = Repairs.query.get_or_404(repairs_id)
@@ -145,6 +144,7 @@ def reject_repair_request(repairs_id):
 def view_request_progress():
     if current_user.is_admin:
         rep = Repairs.query.order_by(Repairs.progress).all()
+        
     return render_template('main/request_progress.html', rep=rep)
 
 
