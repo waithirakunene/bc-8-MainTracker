@@ -91,7 +91,7 @@ def change_password():
             db.session.add(current_user)
             flash('Your password has been updated.')
 
-            return redirect(url_for('main.add_assets'))
+            return redirect(url_for('main.index'))
             
         else:
             flash('Invalid password')
