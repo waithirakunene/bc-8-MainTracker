@@ -40,6 +40,10 @@ class RequestRepairForm(RepairDetailsForm):
     def __init__(self, *args, **kwargs):
         super(RequestRepairForm, self).__init__(*args, **kwargs)
 
+class RejectRepairForm(Form):
+    reasons = TextAreaField("Comments.")
+
+
 
    
 class AssignToForm(Form):
