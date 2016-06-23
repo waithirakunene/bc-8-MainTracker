@@ -19,11 +19,7 @@ class AddFacilityDetailsForm(Form):
 
 class AddRepairPersons(Form):
     name = StringField("Name ", validators=[Required(), Length(8, 50)])
-    phone_no  = IntegerField(
-            "phone_no", validators = []
-            )
-            
-    
+    phone_no  = IntegerField("phone_no", validators = [])
     submit = SubmitField("Add")
 
 
@@ -35,8 +31,7 @@ class RepairDetailsForm(Form):
     def __init__(self, *args, **kwargs):
         super(RepairDetailsForm, self).__init__(*args, **kwargs)
         self.facility.choices = [
-            (i.id, i.facility_name) for i in Facility.query.order_by(Facility.facility_name).all()
-        ]
+            (i.id, i.facility_name) for i in Facility.query.order_by(Facility.facility_name).all()]
 
 
 class RequestRepairForm(RepairDetailsForm):
@@ -45,11 +40,9 @@ class RequestRepairForm(RepairDetailsForm):
     def __init__(self, *args, **kwargs):
         super(RequestRepairForm, self).__init__(*args, **kwargs)
 
-class RejectRepairForm(Form):
-    reasons = TextAreaField("Write a Comments.")
+
    
 class AssignToForm(Form):
-    # def __init__(self):
     name = SelectField("Name", coerce=int)
     message = TextAreaField("message")
 
@@ -71,7 +64,7 @@ class AddFacilityDetailsForm(Form):
     submit = SubmitField("Submit")
    
 
-    #validate facility name
+   
     def validate_name(self, field):
         if Facility.query.filter_by(facility_name=field.data).first():
             raise ValidationError("Facility exists.")
