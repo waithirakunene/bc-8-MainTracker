@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+    MainTracker - View Task
+{% endblock title %}
+
+{% block content %}
+<div class="row update-page">
+    <h1 class="page-header">Update repair: <a href="{{ url_for('main.view_repair', repair_id=repair.id)}}">{{ repair.description | truncate(40, True) | lower }}</a></h1>
+
+    <div class="col-md-6">
+        <h2>Repair Details</h2> <hr>
+        {{ repair_det_panel.details_panel(repair) }}
+    </div>
+    <div class="col-md-6">
+        <h2>Repair Update</h2> <hr>
+        {{ macros.render_alert('alert-danger') }}
+        {{ wtf.quick_form(form) }}
+        {% if current_user.is_admin and not task.resolved %}
+            <br>
+            <a href="{{ url_for('main.reject_repair', repair_id=repair.id)}}" class="btn btn-danger">Reject Repair Request.</a>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock content %}
