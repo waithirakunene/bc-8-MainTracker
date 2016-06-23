@@ -28,8 +28,9 @@ class AddRepairPersons(Form):
 
 
 class RepairDetailsForm(Form):
-    description = StringField("Description", validators=[Required(), Length(10, 255)])
     facility = SelectField("Facility", coerce=int)
+    description = StringField("Description", validators=[Required(), Length(10, 255)])
+    
 
     def __init__(self, *args, **kwargs):
         super(RepairDetailsForm, self).__init__(*args, **kwargs)
