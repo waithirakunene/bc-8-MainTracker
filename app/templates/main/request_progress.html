@@ -13,13 +13,13 @@
     <div class="row">
         {% for repair in rep %}
         <div class="col-md-3">{{repair.requested_by.username}}</div>
+        <div class="col-md-3">assigned_to</div>
+        <div class="col-md-3">{{repair.status}}</div>
         <div class="col-md-3">
-             
+            <button type="button" class="btn btn-success btn-sm">edit</button>
         </div>
-        <div class="col-md-3">In Progress</div>
-        <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-sm">Approve</button>
-        </div>
-    {% endfor %}
+        {%endfor%}
+
+    
     </div>
 {% endblock dashboard %}
