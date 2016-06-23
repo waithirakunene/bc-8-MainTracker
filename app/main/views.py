@@ -32,9 +32,7 @@ def add_facility():
         facility = Facility( 
                 facility_name= form.facility_name.data,
                 facility_description = form.facility_description.data
-                
-             
-        )
+                )
         db.session.add(facility)
         db.session.commit()
         flash('You have added a facility')
@@ -76,9 +74,6 @@ def request_repair():
         )
         db.session.add(repair)
         db.session.commit()     
-        #Notify admin
-        
-        #return redirect(url_for('main.view_request_progress', repair_id=repair.id))
         flash('Great you made a request')
         return redirect(url_for('main.request_repair'))
     return render_template('main/request_repair.html', form=form)
@@ -95,8 +90,6 @@ def view_repairs(repair_id):
     return render_template('main/repair_detail.html', repair=repair)
 
 
-       
-   
 @main.route('/new-requests')
 @login_required
 def view_new_requests():
@@ -104,9 +97,8 @@ def view_new_requests():
         r = Repairs.query.order_by(Repairs.date_requested.desc()).all()
 
     form = AssignToForm()
-    
-    
     return render_template('main/new_requests.html', r=r, form=form)
+
 
 @main.route('/repairs/reject/<int:repairs_id>', methods=['GET', 'POST'])
 @login_required
@@ -127,16 +119,8 @@ def reject_repair_request(repairs_id):
         }
         db.session.delete(repair)
         db.session.commit()
-
-
-
-        #send_mail(repair=temp, rejected=True)
         return redirect(url_for('main.view_new_requests'))
-    # if request.method == "DELETE":
-    #     print "fdgrfgf"
     return render_template('main/new_requests.html', repair=repair, form=form)
-
-
 
 
 @main.route('/request-progress')
@@ -162,6 +146,5 @@ def assign_to(id):
             )
         db.session.add(assign)
         db.session.commit()
-    
     return redirect(url_for('main.view_request_progress'))
-    # return render_template('main/assign_to.html')
+   
