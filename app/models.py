@@ -14,7 +14,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean, default=False)
-    is_repairperson = db.Column(db.Boolean, default=False)
+    assigned_to = db.relationship('RepairRequests', backref='repair_req', lazy='dynamic')
     
 
     @property
@@ -32,25 +32,28 @@ class User(UserMixin, db.Model):
 
     @login_manager.user_loader
     def load_user(user_id):
-        return User.query.get(int(user_id))
-    
-
-    
+        return User.query.get(int(user_id))    
 
 class Facility(db.Model):
     __tablename__ = 'facility'
     id = db.Column(db.Integer, primary_key=True)
     facility_name = db.Column(db.String(64), unique=True, index=True)
     facility_description= db.Column(db.String(64), unique=True, index=True)
-    repairs = db.relationship('Repairs', backref='facility', lazy='dynamic')
+    repairs = db.relationship('RepairRequests', backref='facility', lazy='dynamic')
 
-class RepairPersons(db.Model):
-    __tablename__ = 'repairpersons'
+class Maintainer(db.Model):
+    __tablename__ = 'maintainer'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
-    message = db.Column(db.String(120))
     phone_no = db.Column(db.Integer, unique=True) 
-    repairs = db.relationship('Repairs', backref='repairpersons', lazy='dynamic')
+    repairs = db.relationship('RepairAssignments', backref='assignments', lazy='dynamic')
+
+class RepairAssignments(db.Model):
+    __tablename__ = 'assignments'
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.String(120))
+    maintainer_id = db.Column(db.Integer, db.ForeignKey('maintainer.id'))
+    repair_id = db.Column(db.Integer, db.ForeignKey('repairs.id'))
 
 
 class RepairStatus:
@@ -59,40 +62,20 @@ class RepairStatus:
     PENDING = 2
     DONE = 3
 
-class Repairs(db.Model):
-    __tablename__ = 'repairs'
-    
+class RepairRequests(db.Model):
+    __tablename__ = 'repairs'    
     id = db.Column(db.Integer, primary_key=True)
     facility_id = db.Column(db.Integer, db.ForeignKey('facility.id'))
-   
-    requested_by_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    requested_by = db.relationship('User', foreign_keys=[requested_by_id])
-
-    assigned_by_id = db.Column(db.Integer, db.ForeignKey('repairpersons.id'))
-    assigned_by = db.relationship('RepairPersons', foreign_keys=[assigned_by_id])
-
-
+    requested_by = db.Column(db.Integer, db.ForeignKey('users.id'))
     description = db.Column(db.String(255), nullable=False)
     date_requested = db.Column(db.DateTime(), index=True, default=datetime.now)
     #additional fields
     confirmed = db.Column(db.Boolean, default=False)
-    resolved = db.Column(db.Boolean, default=False)
-    acknowledged = db.Column(db.Boolean, default=False)
-    updated = db.Column(db.DateTime, default=datetime.now)
     progress = db.Column(db.Integer, default=RepairStatus.NOT_STARTED)
     date_requested = db.Column(db.DateTime(), index=True, default=datetime.now)
-    date_completed = db.Column(db.DateTime(), nullable=True) 
+    date_completed = db.Column(db.DateTime(), nullable=True)
+    assigned_to = db.relationship('RepairAssignments', backref='repairs', lazy='dynamic')
 
 
 
-    @property
-    def status(self):
-        if self.progress not in (0, 1, 2, 3):
-            return "Unknown"
-        elif self.progress == RepairStatus.NOT_STARTED:
-            return "Not Started"
-        elif self.progress == RepairStatus.STARTED:
-            return "Started"
-        elif self.progress == RepairStatus.PENDING:
-            return "In Progress"
-        return "DONE"
+   
