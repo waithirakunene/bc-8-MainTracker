@@ -14,7 +14,12 @@
                 
                 <div class="col-sm-8 col-sm-offset-2">
                     {{ wtf.quick_form(form) }}
-                </div>
+                    <br/>
+                    Already have an account? <a href="{{ url_for('auth.login') }}">Click here.</a>
+                </div>                
+            </div>
+            <div>
+                
             </div>
         </div>
     </div>
