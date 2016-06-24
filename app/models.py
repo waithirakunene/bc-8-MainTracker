@@ -78,4 +78,14 @@ class RepairRequests(db.Model):
 
 
 
-   
+    @property
+    def status(self):
+        if self.progress not in (0, 1, 2, 3):
+            return "Unknown"
+        elif self.progress == RepairStatus.NOT_STARTED:
+            return "Not Started"
+        elif self.progress == RepairStatus.STARTED:
+            return "Started"
+        elif self.progress == RepairStatus.PENDING:
+            return "In Progress"
+        return "DONE"
