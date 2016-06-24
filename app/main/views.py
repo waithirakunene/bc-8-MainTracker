@@ -11,7 +11,7 @@ from app.main.forms import (
 @main.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
-    repairs = []
+    
     form = AddFacilityDetailsForm()
     template = 'main/add_facility.html'
     if current_user.is_admin:
