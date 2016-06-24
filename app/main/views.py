@@ -2,55 +2,55 @@ from flask import render_template, url_for, redirect, abort, flash, request, cur
 from flask_login import login_required, current_user
 from app import db
 from app.main import main
-from ..models import User, Facility, RepairPersons, Repairs, RepairStatus 
+from ..models import User, Facility, Maintainer, RepairRequests, RepairStatus, RepairAssignments
 
 from app.main.forms import (
-   AddFacilityDetailsForm, AddRepairPersons, AssignToForm, RepairDetailsForm, RequestRepairForm, RejectRepairForm
+   AddFacilityDetailsForm, AddMaintainerForm, AssignToForm, RepairDetailsForm, RequestRepairForm, RejectRepairForm 
 )
 
 @main.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
     repairs = []
-    if current_user.is_admin:
-        repairs = Repairs.query.order_by(Repairs.date_requested.desc()).all()
-        
-        form = AddFacilityDetailsForm()
-        return render_template('main/add_facility.html', form=form)
-    else:
-        repairs = Repairs.query.filter_by(
-            requested_by_id=current_user.id).order_by(Repairs.date_requested.desc())
-    
-        form = RequestRepairForm()
-        return render_template('main/request_repair.html', form=form)
-
-
-@main.route('/add-facility', methods=['GET','POST'])
-def add_facility():
     form = AddFacilityDetailsForm()
-    if form.validate_on_submit():
-        facility = Facility( 
-                facility_name= form.facility_name.data,
-                facility_description = form.facility_description.data
-                )
-        db.session.add(facility)
-        db.session.commit()
-        flash('You have added a facility')
-        return redirect(url_for('main.add_facility'))
-    return render_template('main/add_facility.html', form=form)
- 
-      
+    template = 'main/add_facility.html'
+    if current_user.is_admin:
+        # repairs = RepairRequests.query.order_by(RepairRequests.date_requested.desc()).all()
+        if form.validate_on_submit():
+            facility = Facility( 
+                    facility_name= form.facility_name.data,
+                    facility_description = form.facility_description.data
+                    )
+            db.session.add(facility)
+            db.session.commit()
+            flash('You have added a facility')
+            return redirect(url_for('main.index'))
+    else:
+        template = 'main/request_repair.html'
+        form = RequestRepairForm()
+        if form.validate_on_submit():
+            repair = RepairRequests(
+                requested_by=current_user.id,
+                facility_id=form.facility.data,
+                description=form.description.data,
+                
+            )
+            db.session.add(repair)
+            db.session.commit()     
+            flash('Great you made a request')
+            return redirect(url_for('main.index'))
+
+    return render_template(template, form=form)
+  
         
 @main.route('/add_repair_persons', methods=['GET','POST'])
 @login_required
 def add_maintainer():
-    form = AddRepairPersons()
+    form = AddMaintainerForm()
     if form.validate_on_submit():
-        repairPerson = RepairPersons( 
-                name= form.name.data,
-                phone_no = form.phone_no.data
-                
-             
+        repairPerson = Maintainer( 
+            name= form.name.data,
+            phone_no = form.phone_no.data 
         )
         db.session.add(repairPerson)
         db.session.commit()
@@ -58,46 +58,24 @@ def add_maintainer():
         return redirect(url_for('main.add_maintainer'))
     return render_template('main/add_maintainer.html', form=form)
 
-
-
-
-@main.route('/request-repair', methods=['GET', 'POST'])
-@login_required
-def request_repair():
-    form = RequestRepairForm()
-    if form.validate_on_submit():
-        repair = Repairs(
-            requested_by_id=current_user.id,
-            facility_id=form.facility.data,
-            description=form.description.data,
-            
-        )
-        db.session.add(repair)
-        db.session.commit()     
-        flash('Great you made a request')
-        return redirect(url_for('main.request_repair'))
-    return render_template('main/request_repair.html', form=form)
-
-
        
 @main.route('/view-repairs/<int:repair_id>')
 @login_required
 def view_repairs(repair_id):
-    repair = Repairs.query.get_or_404(repair_id)
+    repair = RepairRequests.query.get_or_404(repair_id)
     if not (current_user.is_admin):
-        if Repairs.requested_by_id != current_user.id:
+        if RepairRequests.requested_by != current_user.id:
             abort(403)
     return render_template('main/repair_detail.html', repair=repair)
 
 
-@main.route('/new-requests')
+@main.route('/new-requests', methods=['GET', 'POST'])
 @login_required
 def view_new_requests():
     if current_user.is_admin:
-        r = Repairs.query.order_by(Repairs.date_requested.desc()).all()
-
-    form = AssignToForm()
-    return render_template('main/new_requests.html', r=r, form=form)
+        repairs = RepairRequests.query.filter_by(progress=0, confirmed=False).order_by(RepairRequests.date_requested.desc()).all()
+    
+    return render_template('main/new_requests.html', repairs=repairs)
 
 
 @main.route('/repairs/reject/<int:repairs_id>', methods=['GET', 'POST'])
@@ -105,7 +83,7 @@ def view_new_requests():
 def reject_repair_request(repairs_id):
     if not current_user.is_admin:
         abort(403)
-    repair = Repairs.query.get_or_404(repairs_id)
+    repair = RepairRequests.query.get_or_404(repairs_id)
     form = RejectRepairForm()
 
     if request.method == 'GET':
@@ -127,24 +105,40 @@ def reject_repair_request(repairs_id):
 @login_required
 def view_request_progress():
     if current_user.is_admin:
-        rep = Repairs.query.order_by(Repairs.progress).all()
-        
-    return render_template('main/request_progress.html', rep=rep)
+        repairs = RepairAssignments.query.all()
 
+    return render_template('main/request_progress.html', repairs=repairs)  
 
-
-@main.route('/repair/<id>/assign-to')
+@main.route('/assign', methods=['GET', 'POST'])
 @login_required
-def assign_to(id):
+def assign_maintainer():
+    repairs_id = request.args.get('id')
     form = AssignToForm()
     if form.validate_on_submit():
-        assign = RepairPersons(
-
-            repairpersons_name = form.repairpersons.data,
-            repairpersons_message =form.repairpersons.data
-
+        assign = RepairAssignments(
+            maintainer_id = form.name.data,
+            message =form.message.data,
+            repair_id = repairs_id
             )
         db.session.add(assign)
         db.session.commit()
-    return redirect(url_for('main.view_request_progress'))
-   
+
+        repair = RepairRequests.query.filter_by(id=repairs_id).first()
+        repair.progress = 1
+        db.session.commit()
+
+        return redirect(url_for('main.view_new_requests'))
+
+    return render_template('main/assign_repair.html', form=form)
+
+
+@main.route('/notifications', methods=['GET', 'POST'])
+@login_required
+def view_notifications():
+    repair_requests = RepairRequests.query.filter(RepairRequests.requested_by == current_user.id).all()
+    results = []
+    for req in repair_requests:
+        results.append(req.id)
+
+    repairs = RepairAssignments.query.filter(RepairAssignments.id.in_(results)).all()
+    return render_template('main/notifications.html', repairs=repairs) 
