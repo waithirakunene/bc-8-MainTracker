@@ -1,0 +1,25 @@
+{% extends "main/index.html" %}
+
+{% block dashboard %}
+
+    <div class="row heading">
+        <div class="col-md-3">Requested by</div>
+        <div class="col-md-3">Assigned To</div>
+        <div class="col-md-3">Status</div>
+    </div>
+    <br/>
+    
+    {% for repair in repairs %}
+        <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3">{{repair.repairs.repair_req.username}}</div>
+                <div class="col-md-3">{{repair.assignments.name}}</div>
+                <div class="col-md-3">{{repair.repairs.progress}}</div>
+            </div>
+        </div>
+        </div>
+    {%endfor%}
+
+    
+{% endblock dashboard %}
