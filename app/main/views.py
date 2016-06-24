@@ -11,11 +11,9 @@ from app.main.forms import (
 @main.route('/', methods=['GET', 'POST'])
 @login_required
 def index():
-    
     form = AddFacilityDetailsForm()
     template = 'main/add_facility.html'
     if current_user.is_admin:
-        # repairs = RepairRequests.query.order_by(RepairRequests.date_requested.desc()).all()
         if form.validate_on_submit():
             facility = Facility( 
                     facility_name= form.facility_name.data,
@@ -37,7 +35,7 @@ def index():
             )
             db.session.add(repair)
             db.session.commit()     
-            flash('Great you made a request')
+            flash('Request Received.')
             return redirect(url_for('main.index'))
 
     return render_template(template, form=form)
@@ -91,8 +89,6 @@ def reject_repair_request(repairs_id):
             'description': repair.description,
             'date_requested': repair.date_requested,
             'facility': repair.facility,
-            'requested_by': repair.requested_by.email,
-            'requested_by_name': repair.requested_by.username,
             'reasons': form.reasons.data
         }
         db.session.delete(repair)
