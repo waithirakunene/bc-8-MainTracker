@@ -1,0 +1,27 @@
+{% extends "main/index.html" %}
+
+{% block dashboard %}
+
+    <div class="row heading">
+        <div class="col-md-4">Requested by</div>
+        <div class="col-md-4">Description</div>
+        <div class="col-md-4">Actions</div>
+    </div>
+    <br/>
+
+    <div class="row">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form  method="post">
+                {{ form.hidden_tag() }}
+                {{ wtf.form_errors(form, hiddens="only") }}
+                
+                {{ wtf.form_field(form.name) }}
+                {{ wtf.form_field(form.message) }}
+                <button type="submit" class="btn btn-default">Save</button>
+            </form>
+        </div>
+    </div>
+    </div>
+
+{% endblock dashboard %}
