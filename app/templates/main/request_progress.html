@@ -9,17 +9,21 @@
         <div class="col-md-3">Actions</div>
     </div>
     <br/>
-
-    <div class="row">
-        {% for repair in rep %}
-        <div class="col-md-3">{{repair.requested_by.username}}</div>
-        <div class="col-md-3">{{repair.assigned_by.name}}</div>
-        <div class="col-md-3">{{repair.status}}</div>
-        <div class="col-md-3">
-            <button type="button" class="btn btn-success btn-sm">edit</button>
+    
+    {% for repair in repairs %}
+        <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3">{{repair.repairs.repair_req.username}}</div>
+                <div class="col-md-3">{{repair.assignments.name}}</div>
+                <div class="col-md-3">{{repair.repairs.progress}}</div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-success btn-sm">edit</button>
+                </div>
+            </div>
         </div>
-        {%endfor%}
+        </div>
+    {%endfor%}
 
     
-    </div>
 {% endblock dashboard %}
